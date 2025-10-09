@@ -2,26 +2,23 @@ using System;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[Controller]")]
-public class ProductsController(IGenericRepository<Product> genericRepository) : ControllerBase
+
+public class ProductsController(IGenericRepository<Product> genericRepository) : BaseApiController
 {
 
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
+    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery] ProductSpecificationParams productSpecificationParams)
     {
 
-        var specification = new ProductSpecification(brand, type, sort);
-        var products = await genericRepository.ListAsync(specification);
-        return Ok(products);
+        var specification = new ProductSpecification(productSpecificationParams);
+
+
+        return await CreatePageResult<Product>(genericRepository, specification, productSpecificationParams.PageIndex, productSpecificationParams.PageSize);
     }
 
     [HttpGet("brands")]

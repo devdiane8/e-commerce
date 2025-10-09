@@ -15,6 +15,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     bool Exist(int id);
     Task<T?> GetEntitiesWitchSpec(ISpecification<T> specification);
     Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification);
-    Task<TResult?> GetEntitiesWitchSpec<TResult>(ISpecification<T,TResult> specification);
+    Task<TResult?> GetEntitiesWitchSpec<TResult>(ISpecification<T, TResult> specification);
     Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T, TResult> specification);
+
+    Task<int> CountAsync(ISpecification<T> specification);
 }
